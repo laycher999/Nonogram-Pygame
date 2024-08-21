@@ -10,7 +10,7 @@ art = levels[STAGE]
 SCREEN_SIZE = (1000,1000)
 BACKGROUND_COLOR = (255,255,255)
 CELL_COLOR = (0,0,0)
-CELL_SIZE = 400//len(art[0])
+CELL_SIZE = 500//len(art[0])
 
 
 pygame.init()
@@ -35,11 +35,14 @@ class Cell:
             font = pygame.font.SysFont(None, self.size)
             text = font.render(str('X'), True, (255,0,0))
             if self.active is False:
-                screen.blit(text, (self.x+self.size//3, self.y+self.size//3))
+                rect = pygame.Rect(self.x, self.y, self.size-1, self.size-1)
+                pygame.draw.rect(screen, (48,50,52), rect, 0)
                 self.active = True
             else:
-                pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(self.x+5,self.y+5,self.size-10,self.size-10), 0)
+                pygame.draw.rect(screen, BACKGROUND_COLOR, pygame.Rect(self.x,self.y,self.size,self.size), 0)
+                pygame.draw.rect(screen, (0,0,0), pygame.Rect(self.x, self.y, self.size, self.size), 2)
                 self.active = False
+
 
 def draw_cells(art):
     y = 0
@@ -48,7 +51,7 @@ def draw_cells(art):
         x = 0
         line = []
         for k in range(0, cell_count):
-            c = Cell(50*cell_count+x, 50*cell_count+y, CELL_SIZE)
+            c = Cell(250+x, 200+y, CELL_SIZE)
             c.draw()
             x += CELL_SIZE
             line.append(c)
@@ -99,11 +102,11 @@ def start_level(art):
     draw_numbers()
     
 def menu():
-    screen.fill(BACKGROUND_COLOR)
+
     font = pygame.font.SysFont(None, CELL_SIZE // 2)
     text = font.render(f'LEVEL {STAGE+1}', True, (0, 0, 0))
     screen.blit(text, (420,50))
-    screen.fill(BACKGROUND_COLOR)
+
 start_level(art)
 
 
@@ -122,7 +125,9 @@ while True:
 
     if check_win():
         STAGE += 1
+        screen.fill(BACKGROUND_COLOR)
         art = levels[STAGE]
+        CELL_SIZE = 500 // len(art[0])
         start_level(art)
     pygame.display.flip()
 
